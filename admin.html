@@ -1,0 +1,58 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html, body, button {
+  font-family: monospace;
+}
+
+body {
+  height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+}
+
+output {
+  width: 100%;
+  text-align: center;
+  font-size: 5rem;
+}
+
+button {
+  background: transparent;
+  border: 1px solid;
+  padding: 1rem 2rem;
+  text-transform: uppercase;
+  border-radius: .5rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 400ms;
+}
+
+button:hover {
+  background-color: rgb(231, 231, 231);
+}
+
+
+  </style>
+</head>
+<body>
+
+<output>0</output>
+<button>gerar número</button>
+
+  <script>
+    const button = document.querySelector('button')
+button.onclick = () => {
+  const random = Math.floor(Math.random() * 100 + 1)
+  document.querySelector('output').innerText = random
+}
+  </script>
+</body>
+</html>
