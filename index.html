@@ -1,81 +1,81 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-  }
-  .container {
-      text-align: center;
-      max-width: 30rem;
-  }
-  h1 {
-    margin-bottom: 2rem;
-  }
-  .board {
-      display: inline-grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-  .cell {
-      width: 60px;
-      height: 60px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
-      font-weight: bold;
-      background-color: #3498db;
-      color: white;
-      border-radius: 5px;
-      transition: transform 0.3s ease;
-  }
-  .cell:hover {
-      transform: scale(1.1);
-      background-color: #2980b9;
-  }
-  button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #2ecc71;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-  }
-  button:hover {
-      background-color: #27ae60;
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Hacka Kipper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        .board {
+            display: inline-grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .cell:hover {
+            transform: scale(1.1);
+            background-color: #2980b9;
+        }
+        .cell.selected {
+            background-color: #e74c3c;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #27ae60;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Bingo Hacka Kipper</h1>
-    <div class="board" id="board">
-        <!-- Células serão inseridas aqui via JavaScript -->
+    <div class="container">
+        <h1>Bingo Hacka Kipper</h1>
+        <div class="board" id="board">
+            <!-- Células serão inseridas aqui via JavaScript -->
+        </div>
+        
     </div>
-    <!-- <button onclick="gerarNovoBoard()">Gerar Novo Board</button> -->
-</div>
 
-<script>
- function gerarArray5x5Unico() {
+    <script>
+        let cartaoAtual = [];
+
+        function gerarArray5x5Unico() {
             const numerosUsados = new Set();
             const array = [];
             for (let i = 0; i < 5; i++) {
@@ -83,7 +83,7 @@
                 for (let j = 0; j < 5; j++) {
                     let numero;
                     do {
-                        numero = Math.floor(Math.random() * 100) + 1;
+                        numero = Math.floor(Math.random() * 75) + 1; // Números de 1 a 75 para o bingo
                     } while (numerosUsados.has(numero));
                     numerosUsados.add(numero);
                     linha.push(numero);
@@ -96,22 +96,54 @@
         function atualizarBoard(array) {
             const board = document.getElementById('board');
             board.innerHTML = '';
-            array.flat().forEach(numero => {
+            array.flat().forEach((numero, index) => {
                 const cell = document.createElement('div');
                 cell.className = 'cell';
                 cell.textContent = numero;
+                cell.onclick = () => toggleSelecao(index);
                 board.appendChild(cell);
             });
         }
 
-        function gerarNovoBoard() {
-            const novoArray = gerarArray5x5Unico();
-            atualizarBoard(novoArray);
+        function toggleSelecao(index) {
+            const cells = document.querySelectorAll('.cell');
+            cells[index].classList.toggle('selected');
+            salvarEstado();
         }
 
-        // Inicializar o board
-        gerarNovoBoard();
-  
-</script>
+        function salvarEstado() {
+            const selecoes = Array.from(document.querySelectorAll('.cell')).map(cell => cell.classList.contains('selected'));
+            localStorage.setItem('bingoCartao', JSON.stringify(cartaoAtual));
+            localStorage.setItem('bingoSelecoes', JSON.stringify(selecoes));
+        }
+
+        function carregarEstado() {
+            const cartaoSalvo = localStorage.getItem('bingoCartao');
+            const selecoesSalvas = localStorage.getItem('bingoSelecoes');
+
+            if (cartaoSalvo && selecoesSalvas) {
+                cartaoAtual = JSON.parse(cartaoSalvo);
+                const selecoes = JSON.parse(selecoesSalvas);
+                atualizarBoard(cartaoAtual);
+                document.querySelectorAll('.cell').forEach((cell, index) => {
+                    if (selecoes[index]) {
+                        cell.classList.add('selected');
+                    }
+                });
+            } else {
+                gerarNovoCartao();
+            }
+        }
+
+        function gerarNovoCartao() {
+            cartaoAtual = gerarArray5x5Unico();
+            atualizarBoard(cartaoAtual);
+            salvarEstado();
+        }
+
+        // Inicializar o cartão
+        carregarEstado();
+        gerarNovoCartao();
+    </script>
 </body>
 </html>
