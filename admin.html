@@ -1,59 +1,86 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Bingo Hacka Kipper - Admin</title>
   <style>
     html, body, button {
-  font-family: monospace;
-}
+      margin: 0;
+      font-family: monospace;
+      font-size: 120%;
+    }
 
-body {
-  height: 100vh;
-  display: grid;
-  place-content: center;
-  gap: 1rem;
-  zoom: 2;
-}
+    body {
+      height: 100vh;
+      grid-template-rows: 1fr auto 1fr;
+      display: grid;
+      gap: 1rem;
+    }
 
-output {
-  width: 100%;
-  text-align: center;
-  font-size: 5rem;
-}
+    output {
+      width: 100%;
+      text-align: center;
+      font-size: 5rem;
 
-button {
-  background: transparent;
-  border: 1px solid;
-  padding: 1rem 2rem;
-  text-transform: uppercase;
-  border-radius: .5rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: all 400ms;
-}
+      align-self: end;
+    }
 
-button:hover {
-  background-color: rgb(231, 231, 231);
-}
+    button {
+      width: fit-content;
+      justify-self: center;
+      background: transparent;
+      border: 1px solid;
+      padding: 1rem 2rem;
+      text-transform: uppercase;
+      border-radius: .5rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 400ms;
+    }
+
+    button:hover {
+      background-color: rgb(231, 231, 231);
+    }
+
+    footer {
+      margin-top: auto;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    footer span {
+      border: 1px solid;
+      padding: 0.25rem;
+    }
 
 
   </style>
 </head>
 <body>
 
-<output>0</output>
-<button>gerar número</button>
+  <output>0</output>
+  <button>gerar número</button>
+
+  <footer></footer>
 
   <script>
+    const pickedNumbers = new Set()
+    const pickNumber = () => {
+       const random = Math.floor(Math.random() * 75 + 1)
+        
+        if(pickedNumbers.has(random)) {
+          pickNumber()
+          return
+        }
+      pickedNumbers.add(random)
+      document.querySelector('output').innerText = random
+      document.querySelector('footer').innerHTML += `<span>${random}</span>`
+    }
+
     const button = document.querySelector('button')
-button.onclick = () => {
-  const random = Math.floor(Math.random() * 100 + 1)
-  document.querySelector('output').innerText = random
-}
+    button.onclick = pickNumber
+
   </script>
 </body>
 </html>
