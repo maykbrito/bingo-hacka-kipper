@@ -35,7 +35,7 @@
             align-items: center;
             font-size: 24px;
             font-weight: bold;
-            background-color: #3498db;
+            background-color: blueviolet;
             color: white;
             border-radius: 5px;
             cursor: pointer;
@@ -43,7 +43,7 @@
         }
         .cell:hover {
             transform: scale(1.1);
-            background-color: #2980b9;
+            background-color: violet;
         }
         .cell.selected {
             background-color: #e74c3c;
@@ -67,10 +67,7 @@
 <body>
     <div class="container">
         <h1>Bingo Hacka Kipper</h1>
-        <div class="board" id="board">
-            <!-- Células serão inseridas aqui via JavaScript -->
-        </div>
-        
+        <div class="board" id="board"></div>
     </div>
 
     <script>
@@ -109,41 +106,16 @@
         function toggleSelecao(index) {
             const cells = document.querySelectorAll('.cell');
             cells[index].classList.toggle('selected');
-            salvarEstado();
-        }
 
-        function salvarEstado() {
-            const selecoes = Array.from(document.querySelectorAll('.cell')).map(cell => cell.classList.contains('selected'));
-            localStorage.setItem('bingoCartao', JSON.stringify(cartaoAtual));
-            localStorage.setItem('bingoSelecoes', JSON.stringify(selecoes));
-        }
-
-        function carregarEstado() {
-            const cartaoSalvo = localStorage.getItem('bingoCartao');
-            const selecoesSalvas = localStorage.getItem('bingoSelecoes');
-
-            if (cartaoSalvo && selecoesSalvas) {
-                cartaoAtual = JSON.parse(cartaoSalvo);
-                const selecoes = JSON.parse(selecoesSalvas);
-                atualizarBoard(cartaoAtual);
-                document.querySelectorAll('.cell').forEach((cell, index) => {
-                    if (selecoes[index]) {
-                        cell.classList.add('selected');
-                    }
-                });
-            } else {
-                gerarNovoCartao();
-            }
         }
 
         function gerarNovoCartao() {
             cartaoAtual = gerarArray5x5Unico();
             atualizarBoard(cartaoAtual);
-            salvarEstado();
         }
 
         // Inicializar o cartão
-        carregarEstado();
+
         gerarNovoCartao();
     </script>
 </body>
